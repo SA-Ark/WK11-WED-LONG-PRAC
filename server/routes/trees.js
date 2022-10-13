@@ -139,10 +139,26 @@ router.post('/', async (req, res, next) => {
  */
 router.delete('/:id', async (req, res, next) => {
     try {
-        res.json({
-            status: "success",
-            message: `Successfully removed tree ${req.params.id}`,
-        });
+        const { id } = req.params;
+        const bühBye = await Tree.findByPk(id)
+
+
+        if (bühBye) {
+
+            await bühBye.destroy();
+
+            res.json({
+                status: "success",
+                message: `Successfully removed tree ${req.params.id}`,
+            });
+        } else {
+            next({
+                status: 'not-found',
+                message: `Could not remove tree ${req.params.id}`,
+                details: 'Tree not found'
+            })
+        }
+
     } catch (err) {
         next({
             status: "error",
