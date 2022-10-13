@@ -214,7 +214,7 @@ router.put('/:id', async (req, res, next) => {
                 if (location !== undefined) editTree.location = location;
                 if (height !== undefined) editTree.heightFt = height;
                 if (size !== undefined) editTree.groundCircumferenceFt = size;
-
+                editTree.save();
                 res.json({
                     status: 'success',
                     message: `Successfully updated the tree at ${paramsId}!`,
