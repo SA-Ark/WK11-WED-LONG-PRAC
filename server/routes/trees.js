@@ -6,14 +6,14 @@ const router = express.Router();
  * BASIC PHASE 1, Step A - Import model
  */
 // Your code here
-const {Tree} = require('../db/models');
+const { Tree } = require('../db/models');
 
 /**
  * INTERMEDIATE BONUS PHASE 1 (OPTIONAL), Step A:
  *   Import Op to perform comparison operations in WHERE clauses
  **/
 // Your code here
-const {Op} = require('sequelize');
+const { Op } = require('sequelize');
 /**
  * BASIC PHASE 1, Step B - List of all trees in the database
  *
@@ -51,8 +51,8 @@ router.get('/:id', async (req, res, next) => {
     let tree;
     try {
         // Your code here
-        tree =  await Tree.findOne({
-            where:{
+        tree = await Tree.findOne({
+            where: {
                 id: req.params.id
             }
         });
@@ -68,7 +68,7 @@ router.get('/:id', async (req, res, next) => {
                 details: 'Tree not found'
             });
         }
-    } catch(err) {
+    } catch (err) {
         next({
             status: "error",
             message: `Could not find tree ${req.params.id}`,
@@ -95,11 +95,20 @@ router.get('/:id', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
     try {
+        const { name, location, height, size } = req.body;
+        const newTree = await Tree.create({
+            tree: name,
+            location,
+            heightFt: height,
+            groundCircumferenceFt: size
+        })
+
         res.json({
             status: "success",
             message: "Successfully created new tree",
+            tree: newTree
         });
-    } catch(err) {
+    } catch (err) {
         next({
             status: "error",
             message: 'Could not create new tree',
@@ -134,7 +143,7 @@ router.delete('/:id', async (req, res, next) => {
             status: "success",
             message: `Successfully removed tree ${req.params.id}`,
         });
-    } catch(err) {
+    } catch (err) {
         next({
             status: "error",
             message: `Could not remove tree ${req.params.id}`,
@@ -180,7 +189,7 @@ router.delete('/:id', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
     try {
         // Your code here
-    } catch(err) {
+    } catch (err) {
         next({
             status: "error",
             message: 'Could not update new tree',
