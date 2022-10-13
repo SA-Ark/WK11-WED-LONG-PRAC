@@ -204,6 +204,37 @@ router.delete('/:id', async (req, res, next) => {
  */
 router.put('/:id', async (req, res, next) => {
     try {
+        const paramsId = req.params.id;
+        const { id, name, location, height, size } = req.body;
+        const editTree = await Tree.findByPk(paramsId);
+
+        if (paramsId === id) {
+            if (editTree) {
+                if (name !== undefined) editTree.tree = name;
+                if (location !== undefined) editTree.location = location;
+                if (height !== undefined) editTree.heightFt = height;
+                if (size !== undefined) editTree.groundCircumferenceFt = size;
+
+                res.json({
+                    status: 'success',
+                    message: `Successfully updated the tree at ${paramsId}!`,
+                    tree: editTree
+                })
+            } else {
+                next({
+                    status: 'not-found',
+                    message: `Could not update Tree ${paramsId}`,
+                    details: 'Tree not found'
+                })
+            }
+        } else {
+            next({
+                status: 'error',
+                message: `Could not update Tree ${paramsId}`,
+                details: `${paramsId} did not match ${id}`
+            })
+        }
+
         // Your code here
     } catch (err) {
         next({
